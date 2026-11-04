@@ -1,0 +1,31 @@
+/* The component's colours, as tokens a host overrides on any ancestor (:root or a wrapper): these defaults have
+   no weight (:where), so any rule of the host wins. Each text colour reaches WCAG AA on each surface, in both
+   themes (tests/component/contrast.test.ts reads this file). */
+:where(:root) {
+  --dm-ground: #ffffff;
+  --dm-panel: #f6f8fa;
+  --dm-rule: #d0d7de;
+  --dm-ink: #1f2328;
+  --dm-muted: #59636e;
+  --dm-accent: #0960c7;
+  --dm-sound: #1a7f37;
+  --dm-to-look-at: #8a5d00;
+  --dm-blocking: #c4212c;
+  --dm-before: #1a7f37;
+  --dm-after: #c4212c;
+}
+@media (prefers-color-scheme: dark) {
+  :where(:root) {
+    --dm-ground: #0d1117;
+    --dm-panel: #161b22;
+    --dm-rule: #30363d;
+    --dm-ink: #e6edf3;
+    --dm-muted: #9198a1;
+    --dm-accent: #4493f8;
+    --dm-sound: #3fb950;
+    --dm-to-look-at: #d29922;
+    --dm-blocking: #f85149;
+    --dm-before: #3fb950;
+    --dm-after: #f85149;
+  }
+}

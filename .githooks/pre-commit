@@ -1,0 +1,4 @@
+#!/bin/sh
+# Runs the guards before each commit (logic in tools/hooks.py, same commands as CI).
+# Never skip it with --no-verify: CI runs the same checks and blocks anyway.
+exec uv run --frozen python tools/hooks.py pre-commit

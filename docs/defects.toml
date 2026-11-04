@@ -1,0 +1,44 @@
+# Defects register: the source. The readable page, docs/defects.md, is generated from it by
+# `python tools/build_defects.py`, which also checks every entry (fields, lists, proofs, links).
+#
+# One entry per real defect detected — code, configuration, content, tool, environment, third party or the way
+# we work — even one caught during development. Entries follow each other (DEF-001, DEF-002…), are never
+# renumbered, and are written with the fix, in the same commit.
+#
+# Format shared by every project of the workspace: the keys are the same everywhere, the values are in the
+# repository's language. Keys: id, date (of the finding), titre, type, etiquettes, gravite, statut, constat,
+# cause, solution, resultat, preuve (test or check files, each naming the defect, or "Manual: …" / "Rule: …"),
+# and if needed lecon, liens (commits, catalogue features), reconstitue (entry written after the fact).
+# Allowed values (types, severities, statuses, tags): at the top of tools/build_defects.py.
+
+[[defaut]]
+id = "DEF-001"
+date = 2026-11-04
+titre = "The generated types named a type twice and lost the links' pair of keys"
+type = "tool"
+etiquettes = ["format"]
+gravite = "minor"
+statut = "fixed"
+constat = "The first component/document.ts generated from the schema had Name1, Description1 and Status1 beside Name, Description and Status, and typed the links as [unknown, unknown][]."
+cause = "json-schema-to-typescript turns every titled field (pydantic titles each one) and every reference beside a default into a type of its own, and does not read prefixItems, the 2020-12 form of a tuple."
+solution = "The schema is generated without field titles; a reference beside a default is written anyOf[reference]; the pair of keys carries its TypeScript type (tsType, a keyword validators ignore)."
+resultat = "One type per class and per vocabulary; the links typed [string, string][]."
+lecon = "A generated file is read once by a person before it is trusted: up to date is not the same as right."
+preuve = ["tests/format/test_generated_types.py"]
+liens = ["FORMAT-02"]
+
+[[defaut]]
+id = "DEF-002"
+date = 2026-11-04
+titre = "The zones' names were never drawn above their columns"
+type = "code"
+etiquettes = ["component"]
+gravite = "minor"
+statut = "fixed"
+constat = "On the demo page, the map showed its columns without their names (As received, Checked…), though the layout kept room for them; Portfolio Advisor's map, the one extracted, has the same gap."
+cause = "When the map moved to Svelte Flow, its hand-drawn zone titles were not carried over: only the tables became nodes, and no test looked for the titles."
+solution = "Each zone's name is a node of its own above its column, never picked, so it zooms and pans with the map."
+resultat = "Every column is named; Portfolio Advisor gets them when it moves to data-map."
+lecon = "When a drawing moves to a library, list what the old one showed, and test each item."
+preuve = ["tests/component/map.test.ts"]
+liens = ["MAP-01"]

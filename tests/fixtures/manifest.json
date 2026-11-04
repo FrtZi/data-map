@@ -1,0 +1,75 @@
+{
+  "metadata": { "dbt_schema_version": "https://schemas.getdbt.com/dbt/manifest/v12.json" },
+  "sources": {
+    "source.shop.raw.orders": {
+      "resource_type": "source",
+      "schema": "raw",
+      "name": "orders",
+      "identifier": "shop_orders",
+      "description": "Orders as the fictitious shop exports them, every night.",
+      "columns": {
+        "order_id": { "name": "order_id", "description": "The shop's order number.", "data_type": "varchar" }
+      }
+    },
+    "source.shop.raw.customers": {
+      "resource_type": "source",
+      "schema": "raw",
+      "name": "customers",
+      "description": "",
+      "columns": {}
+    }
+  },
+  "nodes": {
+    "seed.shop.country": {
+      "resource_type": "seed",
+      "schema": "reference",
+      "name": "country",
+      "description": "The countries the shop delivers to.",
+      "columns": {},
+      "depends_on": { "nodes": [] }
+    },
+    "model.shop.orders__checked": {
+      "resource_type": "model",
+      "schema": "staging",
+      "name": "orders__checked",
+      "description": "An intermediate step the map does not show.",
+      "columns": {},
+      "depends_on": { "nodes": ["source.shop.raw.orders"] }
+    },
+    "model.shop.orders": {
+      "resource_type": "model",
+      "schema": "staging",
+      "name": "orders",
+      "description": "One row per order, checked and in euro cents.",
+      "columns": {
+        "order_id": { "name": "order_id", "description": "The shop's order number.", "data_type": "varchar" },
+        "amount_cents": { "name": "amount_cents", "description": "", "data_type": null }
+      },
+      "depends_on": { "nodes": ["model.shop.orders__checked", "seed.shop.country"] }
+    },
+    "model.shop.customers": {
+      "resource_type": "model",
+      "schema": "staging",
+      "name": "customers",
+      "description": "One row per customer.",
+      "columns": {},
+      "depends_on": { "nodes": ["source.shop.raw.customers"] }
+    },
+    "model.shop.revenue": {
+      "resource_type": "model",
+      "schema": "marts",
+      "name": "revenue",
+      "alias": "monthly_revenue",
+      "description": "Revenue by month and country.",
+      "columns": {},
+      "depends_on": { "nodes": ["model.shop.orders", "model.shop.customers"] }
+    },
+    "test.shop.not_null_orders_order_id": {
+      "resource_type": "test",
+      "schema": "staging_tests",
+      "name": "not_null_orders_order_id",
+      "columns": {},
+      "depends_on": { "nodes": ["model.shop.orders"] }
+    }
+  }
+}

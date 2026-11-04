@@ -1,0 +1,38 @@
+# CI: the same guards as the git hooks (tools/hooks.py ci), from an empty folder and the lockfiles.
+# Python comes from .python-version (uv), never pinned here.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  guards-and-tests:
+    runs-on: ubuntu-26.04 # an explicit image: ubuntu-latest moves without a commit
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0 # gitleaks scans the whole history
+
+      # Pinned by commit: since v8, setup-uv publishes no floating major tag.
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+
+      - name: Install from the lockfile only
+        run: uv sync --locked
+
+      # Node's major version is package.json's engines (stack.toml's target).
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install the component from its lockfile only
+        run: npm ci
+
+      - name: Guards and tests
+        run: uv run python tools/hooks.py ci

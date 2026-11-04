@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.venv/
+package-lock.json
+# Prose is not reformatted: the documents keep their hand-made tables and line breaks.
+*.md
+# Generated, never edited by hand (tools/build_format.py writes and checks it).
+format/map.schema.json

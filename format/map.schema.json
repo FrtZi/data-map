@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "Column": {
+      "additionalProperties": false,
+      "properties": {
+        "column_name": {
+          "type": "string"
+        },
+        "data_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "What the column holds, in the reader's words."
+        },
+        "status_code": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Status"
+            }
+          ],
+          "default": "SOUND"
+        },
+        "notes": {
+          "default": [],
+          "description": "What the host found on it, one line each.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "column_name"
+      ],
+      "title": "Column",
+      "type": "object"
+    },
+    "Figure": {
+      "additionalProperties": false,
+      "description": "A key figure of a node, shown as a tile: a number is formatted by the component, a text shown as is.",
+      "properties": {
+        "label": {
+          "description": "What the figure counts, e.g. 'Rows'.",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "title": "Figure",
+      "type": "object"
+    },
+    "Node": {
+      "additionalProperties": false,
+      "description": "A table, a view or anything that reads them (a page, a report), placed in its zone's column.",
+      "properties": {
+        "key": {
+          "description": "Its technical name, unique on the map (schema.name for a table); shown on hover.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Its functional name, the one shown.",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "status_code": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Status"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Empty: as sound as the worst node it comes from, however far back."
+        },
+        "figures": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Figure"
+          },
+          "type": "array"
+        },
+        "columns": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Column"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "key",
+        "name"
+      ],
+      "title": "Node",
+      "type": "object"
+    },
+    "Status": {
+      "description": "How sound a node or a column is; the component shows each with an icon and a word, never by colour alone.",
+      "enum": [
+        "SOUND",
+        "TO_LOOK_AT",
+        "BLOCKING",
+        "NOT_BUILT"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "Zone": {
+      "additionalProperties": false,
+      "description": "A column of the map: a layer of the project (sources, staging, marts…) or its readers.",
+      "properties": {
+        "zone_code": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "nodes": {
+          "items": {
+            "$ref": "#/$defs/Node"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "zone_code",
+        "name",
+        "nodes"
+      ],
+      "title": "Zone",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "What the component draws: the zones left to right, their nodes top to bottom, and the links.",
+  "properties": {
+    "format_version": {
+      "default": 1,
+      "type": "integer"
+    },
+    "zones": {
+      "items": {
+        "$ref": "#/$defs/Zone"
+      },
+      "type": "array"
+    },
+    "links": {
+      "default": [],
+      "description": "From a node's key to the key of a node it feeds.",
+      "items": {
+        "maxItems": 2,
+        "minItems": 2,
+        "prefixItems": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "tsType": "[string, string]",
+        "type": "array"
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "zones"
+  ],
+  "title": "MapDocument",
+  "type": "object"
+}

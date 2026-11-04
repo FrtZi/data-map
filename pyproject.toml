@@ -1,0 +1,60 @@
+[project]
+name = "data-map"
+version = "0.1.0"
+description = "An interactive map of a dbt project's tables: zones, lineage, a status per table, its columns described"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.13"
+dependencies = ["pydantic>=2.11"]
+
+[dependency-groups]
+dev = [
+    "pyright>=1.1.400",
+    "pytest>=8.4",
+    "ruff>=0.13",
+    "tzdata>=2025.2",  # the register's time zone (tools/checks.py): Windows has no time zone database of its own
+]
+
+[build-system]
+requires = ["uv_build>=0.9,<0.12"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-root = ""  # the package sits at the root, beside the component (ARCHITECTURE.md)
+
+[tool.uv]
+default-groups = ["dev"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tools"]  # the guards (tools/) are tested too
+addopts = "--strict-markers"
+markers = ["feature(*ids): the catalogue features this test proves (docs/features.md)"]
+
+[tool.pyright]
+include = ["data_map", "tests", "tools"]
+pythonVersion = "3.13"
+extraPaths = ["tools"]
+typeCheckingMode = "standard"
+
+# A bare `ruff` (an editor, a command typed by hand) uses the same rules as the hooks and the CI.
+[tool.ruff]
+line-length = 120
+target-version = "py313"
+
+[tool.ruff.lint]
+# E/W: PEP 8 style, F: errors, I: import order, N: naming, B: common pitfalls,
+# SIM: simplifications, C90: complexity, PLR: function size (statements, arguments), UP: modern syntax.
+select = ["E", "W", "F", "I", "N", "B", "SIM", "C90", "PLR0913", "PLR0915", "UP"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.lint.pylint]
+max-args = 6
+max-statements = 40
+
+[tool.ruff.lint.isort]
+known-first-party = ["data_map", "build_defects", "build_format", "check_features", "check_file_size", "check_links",
+                     "checks", "hooks", "watch_ci"]

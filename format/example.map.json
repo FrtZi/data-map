@@ -1,0 +1,86 @@
+{
+  "format_version": 1,
+  "zones": [
+    {
+      "zone_code": "raw",
+      "name": "As received",
+      "nodes": [
+        {
+          "key": "raw.shop_orders",
+          "name": "Orders received",
+          "description": "Orders as the fictitious shop exports them, every night.",
+          "status_code": "SOUND",
+          "figures": [
+            { "label": "Rows", "value": 125400 },
+            { "label": "From → to", "value": "2025-01-02 → 2026-10-30" }
+          ],
+          "columns": [
+            { "column_name": "order_id", "data_type": "varchar", "description": "The shop's order number." },
+            { "column_name": "amount", "data_type": "varchar", "description": "The amount as exported, in euros." }
+          ]
+        },
+        {
+          "key": "raw.customers",
+          "name": "Customers received",
+          "status_code": "SOUND",
+          "figures": [{ "label": "Rows", "value": 8312 }]
+        }
+      ]
+    },
+    {
+      "zone_code": "staging",
+      "name": "Checked",
+      "nodes": [
+        {
+          "key": "staging.orders",
+          "name": "Orders",
+          "description": "One row per order, checked and in euro cents.",
+          "status_code": "TO_LOOK_AT",
+          "figures": [{ "label": "Rows", "value": 125397 }],
+          "columns": [
+            {
+              "column_name": "order_id",
+              "data_type": "varchar",
+              "description": "The shop's order number.",
+              "status_code": "TO_LOOK_AT",
+              "notes": ["3 duplicates left out"]
+            },
+            { "column_name": "amount_cents", "data_type": "bigint", "description": "The amount, in euro cents." }
+          ]
+        },
+        { "key": "staging.customers", "name": "Customers", "status_code": "SOUND" },
+        {
+          "key": "staging.returns",
+          "name": "Returns",
+          "description": "One row per item sent back.",
+          "status_code": "NOT_BUILT"
+        }
+      ]
+    },
+    {
+      "zone_code": "marts",
+      "name": "For reading",
+      "nodes": [
+        {
+          "key": "marts.monthly_revenue",
+          "name": "Revenue",
+          "description": "Revenue by month and country.",
+          "status_code": "SOUND",
+          "figures": [{ "label": "Months", "value": 22 }]
+        }
+      ]
+    },
+    {
+      "zone_code": "pages",
+      "name": "Pages",
+      "nodes": [{ "key": "page:sales", "name": "Sales", "description": "The sales page reads the revenue." }]
+    }
+  ],
+  "links": [
+    ["raw.customers", "staging.customers"],
+    ["raw.shop_orders", "staging.orders"],
+    ["staging.customers", "marts.monthly_revenue"],
+    ["staging.orders", "marts.monthly_revenue"],
+    ["marts.monthly_revenue", "page:sales"]
+  ]
+}

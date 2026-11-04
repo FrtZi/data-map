@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.env
+# The instructions for the coding assistant stay on the author's machine: never published.
+CLAUDE.md
+.claude/
