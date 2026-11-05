@@ -62,6 +62,7 @@ describe("MAP-05 the detail of the node picked", () => {
   test("its figures and each column, with what it holds, its status and the host's notes", () => {
     render(DataMap, { map: MAP, picked: "staging.orders" });
     expect(screen.getByRole("heading", { name: /Orders/ })).toBeTruthy();
+    expect(screen.getByText(/One row per order/).textContent).toContain("staging.orders · One row per order");
     expect(screen.getByText("125,397")).toBeTruthy(); // a number formatted in the host's locale
     expect(screen.getByText("3 duplicates left out")).toBeTruthy();
     expect(screen.getAllByRole("row")).toHaveLength(3);

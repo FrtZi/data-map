@@ -19,6 +19,8 @@ It was first the store's map of Portfolio Advisor, a personal project; it is kep
 ## Use it
 
 ```python
+from pathlib import Path
+
 from data_map import Node, Status, Zone, build_map, read_manifest
 
 zones = [
@@ -46,8 +48,8 @@ in English, replaced through its `labels` property.
 Install both halves from a tag of this repository:
 
 ```bash
-uv add "data-map @ git+https://github.com/FrtZi/data-map@v0.1.0"
-npm install github:FrtZi/data-map#v0.1.0
+uv add "data-map @ git+https://github.com/FrtZi/data-map@v0.1.1"
+npm install github:FrtZi/data-map#v0.1.1
 ```
 
 ## Work on it

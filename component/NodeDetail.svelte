@@ -11,8 +11,8 @@
 
 <h3>{node.name} <StatusMark {status} name={labels.statuses[status]} words={true} /></h3>
 <p class="muted">
-  <code>{node.key}</code>{#if node.description}
-    · {node.description}{/if}
+  <code>{node.key}</code>
+  {#if node.description}· {node.description}{/if}
 </p>
 {#if node.status_code === "NOT_BUILT"}
   <p class="muted">{labels.notBuilt}</p>

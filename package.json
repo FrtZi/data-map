@@ -1,6 +1,6 @@
 {
   "name": "data-map",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An interactive map of a dbt project's tables: zones, lineage, a status per table, its columns described.",
   "license": "MIT",
   "type": "module",
